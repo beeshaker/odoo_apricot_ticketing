@@ -1,0 +1,115 @@
+<odoo>
+    <record id="action_report_apricot_job_card" model="ir.actions.report">
+        <field name="name">Job Card</field>
+        <field name="model">apricot.job.card</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">apricot_ticketing.report_apricot_job_card</field>
+        <field name="report_file">apricot_ticketing.report_apricot_job_card</field>
+        <field name="binding_model_id" ref="model_apricot_job_card"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_apricot_job_card">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Job Card: <span t-field="doc.name"/></h2>
+                        <p><strong>Title:</strong> <span t-field="doc.title"/></p>
+                        <table class="table table-sm o_main_table">
+                            <tr>
+                                <td><strong>Ticket</strong></td>
+                                <td><span t-field="doc.ticket_id"/></td>
+                                <td><strong>Status</strong></td>
+                                <td><span t-field="doc.status"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Property</strong></td>
+                                <td><span t-field="doc.property_id"/></td>
+                                <td><strong>Unit</strong></td>
+                                <td><span t-field="doc.unit_number"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Assigned To</strong></td>
+                                <td><span t-field="doc.assigned_user_id"/></td>
+                                <td><strong>Created By</strong></td>
+                                <td><span t-field="doc.created_by_user_id"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Estimated Cost</strong></td>
+                                <td><span t-field="doc.estimated_cost"/></td>
+                                <td><strong>Actual Cost</strong></td>
+                                <td><span t-field="doc.actual_cost"/></td>
+                            </tr>
+                        </table>
+                        <h4>Description</h4>
+                        <p t-field="doc.description"/>
+                        <h4>Activities</h4>
+                        <p t-field="doc.activities"/>
+                        <t t-if="doc.signoff_ids">
+                            <h4>Signoff</h4>
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Signed At</th>
+                                        <th>Name</th>
+                                        <th>Role</th>
+                                        <th>Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="doc.signoff_ids" t-as="signoff">
+                                        <td><span t-field="signoff.signed_at"/></td>
+                                        <td><span t-field="signoff.signed_by_name"/></td>
+                                        <td><span t-field="signoff.signed_by_role"/></td>
+                                        <td><span t-field="signoff.signoff_notes"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="job_card_public_verify_template" name="Job Card Public Verification">
+        <html>
+            <head>
+                <title>Job Card Verification</title>
+                <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                <style>
+                    body { font-family: Arial, sans-serif; background: #f6f7fb; margin: 0; padding: 24px; color: #222; }
+                    .card { max-width: 840px; margin: 0 auto; background: #fff; border-radius: 14px; padding: 24px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+                    .badge { display: inline-block; padding: 6px 10px; border-radius: 999px; background: #eef2ff; }
+                    table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+                    td { padding: 8px; border-bottom: 1px solid #eee; vertical-align: top; }
+                    h1 { margin-top: 0; }
+                </style>
+            </head>
+            <body>
+                <div class="card">
+                    <h1>Job Card Verification</h1>
+                    <p class="badge"><t t-esc="job.name"/> — <t t-esc="job.status"/></p>
+                    <table>
+                        <tr><td><strong>Title</strong></td><td><t t-esc="job.title"/></td></tr>
+                        <tr><td><strong>Property</strong></td><td><t t-esc="job.property_id.name or ''"/></td></tr>
+                        <tr><td><strong>Unit</strong></td><td><t t-esc="job.unit_number or ''"/></td></tr>
+                        <tr><td><strong>Assigned To</strong></td><td><t t-esc="job.assigned_user_id.name or ''"/></td></tr>
+                        <tr><td><strong>Description</strong></td><td><t t-esc="job.description or ''"/></td></tr>
+                        <tr><td><strong>Activities</strong></td><td><t t-esc="job.activities or ''"/></td></tr>
+                        <tr><td><strong>Completed At</strong></td><td><t t-esc="job.completed_at or ''"/></td></tr>
+                    </table>
+                    <t t-if="job.signoff_ids">
+                        <h3>Signoff</h3>
+                        <ul>
+                            <li t-foreach="job.signoff_ids" t-as="signoff">
+                                <t t-esc="signoff.signed_by_name"/> — <t t-esc="signoff.signed_at"/>
+                            </li>
+                        </ul>
+                    </t>
+                </div>
+            </body>
+        </html>
+    </template>
+</odoo>

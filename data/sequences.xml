@@ -1,0 +1,19 @@
+<odoo noupdate="1">
+    <record id="seq_apricot_ticket" model="ir.sequence">
+        <field name="name">Apricot Ticket</field>
+        <field name="code">apricot.ticket</field>
+        <field name="prefix">TCK/%(year)s/</field>
+        <field name="padding">5</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+    </record>
+
+    <record id="seq_apricot_job_card" model="ir.sequence">
+        <field name="name">Apricot Job Card</field>
+        <field name="code">apricot.job.card</field>
+        <field name="prefix">JC/%(year)s/</field>
+        <field name="padding">5</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+    </record>
+</odoo>

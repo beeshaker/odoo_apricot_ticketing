@@ -1,0 +1,51 @@
+<odoo>
+    <record id="stage_open" model="apricot.ticket.stage">
+        <field name="name">Open</field>
+        <field name="sequence">1</field>
+    </record>
+    <record id="stage_in_progress" model="apricot.ticket.stage">
+        <field name="name">In Progress</field>
+        <field name="sequence">2</field>
+    </record>
+    <record id="stage_resolved" model="apricot.ticket.stage">
+        <field name="name">Resolved</field>
+        <field name="sequence">3</field>
+        <field name="is_resolved">1</field>
+    </record>
+    <record id="stage_closed" model="apricot.ticket.stage">
+        <field name="name">Closed</field>
+        <field name="sequence">4</field>
+        <field name="is_closed">1</field>
+        <field name="fold">1</field>
+    </record>
+    <record id="stage_cancelled" model="apricot.ticket.stage">
+        <field name="name">Cancelled</field>
+        <field name="sequence">5</field>
+        <field name="fold">1</field>
+    </record>
+
+    <record id="category_plumbing" model="apricot.ticket.category">
+        <field name="name">Plumbing</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="category_electrical" model="apricot.ticket.category">
+        <field name="name">Electrical</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="category_security" model="apricot.ticket.category">
+        <field name="name">Security</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="category_cleaning" model="apricot.ticket.category">
+        <field name="name">Cleaning</field>
+        <field name="sequence">40</field>
+    </record>
+    <record id="category_maintenance" model="apricot.ticket.category">
+        <field name="name">General Maintenance</field>
+        <field name="sequence">50</field>
+    </record>
+    <record id="category_other" model="apricot.ticket.category">
+        <field name="name">Other</field>
+        <field name="sequence">999</field>
+    </record>
+</odoo>

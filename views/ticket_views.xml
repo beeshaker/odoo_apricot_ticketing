@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_apricot_ticket_kanban" model="ir.ui.view">
+        <field name="name">apricot.ticket.kanban</field>
+        <field name="model">apricot.ticket</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="stage_id" class="o_kanban_small_column">
+                <field name="name"/>
+                <field name="requester_id"/>
+                <field name="property_id"/>
+                <field name="category_id"/>
+                <field name="assigned_user_id"/>
+                <field name="due_date"/>
+                <field name="source"/>
+                <field name="unit_number"/>
+
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_global_click o_kanban_record">
+                            <div class="o_kanban_record_top">
+                                <strong>
+                                    <field name="name"/>
+                                </strong>
+                            </div>
+
+                            <div class="mt-1">
+                                <field name="requester_id"/>
+                            </div>
+
+                            <div class="text-muted">
+                                <field name="property_id"/>
+                                <t t-if="record.unit_number.raw_value">
+                                    / Unit <field name="unit_number"/>
+                                </t>
+                            </div>
+
+                            <div class="mt-2">
+                                <field name="category_id"/>
+                            </div>
+
+                            <div class="mt-2 text-muted">
+                                Assigned:
+                                <field name="assigned_user_id"/>
+                            </div>
+
+                            <div class="mt-1 text-muted">
+                                Due:
+                                <field name="due_date"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_apricot_ticket_list" model="ir.ui.view">
+        <field name="name">apricot.ticket.list</field>
+        <field name="model">apricot.ticket</field>
+        <field name="arch" type="xml">
+            <list string="Tickets">
+                <field name="name"/>
+                <field name="requester_id"/>
+                <field name="requester_whatsapp_number"/>
+                <field name="property_id"/>
+                <field name="unit_number"/>
+                <field name="category_id"/>
+                <field name="stage_id"/>
+                <field name="assigned_user_id"/>
+                <field name="due_date"/>
+                <field name="source"/>
+                <field name="is_read"/>
+                <field name="create_date"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_apricot_ticket_form" model="ir.ui.view">
+        <field name="name">apricot.ticket.form</field>
+        <field name="model">apricot.ticket</field>
+        <field name="arch" type="xml">
+            <form string="Ticket">
+                <header>
+                    <button name="action_mark_read"
+                            type="object"
+                            string="Mark Read"
+                            class="btn-secondary"
+                            invisible="is_read"/>
+
+                    <button name="action_set_in_progress"
+                            type="object"
+                            string="Start"
+                            class="btn-primary"/>
+
+                    <button name="action_resolve"
+                            type="object"
+                            string="Resolve"
+                            class="btn-success"/>
+
+                    <button name="action_close"
+                            type="object"
+                            string="Close"
+                            class="btn-secondary"/>
+
+                    <button name="action_create_job_card"
+                            type="object"
+                            string="Create Job Card"
+                            class="btn-primary"
+                            invisible="job_card_count"/>
+
+                    <button name="action_view_job_card"
+                            type="object"
+                            string="View Job Card"
+                            class="btn-secondary"
+                            invisible="not job_card_count"/>
+
+                    <field name="stage_id"
+                           widget="statusbar"
+                           options="{'clickable': '1'}"/>
+                </header>
+
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_attachments"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-paperclip">
+                            <field name="attachment_count"
+                                   widget="statinfo"
+                                   string="Attachments"/>
+                        </button>
+                    </div>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="requester_id"/>
+                            <field name="requester_whatsapp_number" readonly="1"/>
+                            <field name="property_id"/>
+                            <field name="unit_number"/>
+                            <field name="source"/>
+                        </group>
+
+                        <group>
+                            <field name="category_id"/>
+                            <field name="assigned_user_id"/>
+                            <field name="due_date"/>
+                            <field name="is_read"/>
+                            <field name="reassign_count" readonly="1"/>
+                            <field name="resolved_at" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Issue">
+                            <field name="issue_description"
+                                   placeholder="Describe the issue..."/>
+                        </page>
+
+                        <page string="Updates">
+                            <field name="update_ids">
+                                <list editable="bottom">
+                                    <field name="created_at" readonly="1"/>
+                                    <field name="updated_by_id" readonly="1"/>
+                                    <field name="update_text"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <page string="Assignment Logs">
+                            <field name="assignment_log_ids" readonly="1">
+                                <list>
+                                    <field name="changed_at"/>
+                                    <field name="old_user_id"/>
+                                    <field name="new_user_id"/>
+                                    <field name="changed_by_id"/>
+                                    <field name="reason"/>
+                                    <field name="reassign_count"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <page string="Category Logs">
+                            <field name="category_log_ids" readonly="1">
+                                <list>
+                                    <field name="changed_at"/>
+                                    <field name="old_category_id"/>
+                                    <field name="new_category_id"/>
+                                    <field name="changed_by_id"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Simplified search view for Odoo 19 compatibility -->
+    <record id="view_apricot_ticket_search" model="ir.ui.view">
+        <field name="name">apricot.ticket.search</field>
+        <field name="model">apricot.ticket</field>
+        <field name="arch" type="xml">
+            <search string="Tickets">
+                <field name="name"/>
+                <field name="requester_id"/>
+                <field name="property_id"/>
+                <field name="category_id"/>
+                <field name="assigned_user_id"/>
+
+                <filter name="filter_unread"
+                        string="Unread"
+                        domain="[('is_read', '=', False)]"/>
+
+                <filter name="filter_my_tickets"
+                        string="My Tickets"
+                        domain="[('assigned_user_id', '=', uid)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_apricot_ticket_pivot" model="ir.ui.view">
+        <field name="name">apricot.ticket.pivot</field>
+        <field name="model">apricot.ticket</field>
+        <field name="arch" type="xml">
+            <pivot string="Ticket Analysis">
+                <field name="stage_id" type="row"/>
+                <field name="property_id" type="col"/>
+                <field name="id" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_apricot_ticket_graph" model="ir.ui.view">
+        <field name="name">apricot.ticket.graph</field>
+        <field name="model">apricot.ticket</field>
+        <field name="arch" type="xml">
+            <graph string="Tickets" type="bar">
+                <field name="stage_id"/>
+                <field name="id" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_apricot_tickets" model="ir.actions.act_window">
+        <field name="name">Tickets</field>
+        <field name="res_model">apricot.ticket</field>
+        <field name="view_mode">kanban,list,form,pivot,graph</field>
+        <field name="search_view_id" ref="view_apricot_ticket_search"/>
+    </record>
+
+    <record id="action_apricot_my_tickets" model="ir.actions.act_window">
+        <field name="name">My Tickets</field>
+        <field name="res_model">apricot.ticket</field>
+        <field name="view_mode">kanban,list,form,pivot,graph</field>
+        <field name="domain">[('assigned_user_id', '=', uid)]</field>
+        <field name="search_view_id" ref="view_apricot_ticket_search"/>
+    </record>
+
+    <record id="action_apricot_ticket_categories" model="ir.actions.act_window">
+        <field name="name">Ticket Categories</field>
+        <field name="res_model">apricot.ticket.category</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_apricot_ticket_stages" model="ir.actions.act_window">
+        <field name="name">Ticket Stages</field>
+        <field name="res_model">apricot.ticket.stage</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

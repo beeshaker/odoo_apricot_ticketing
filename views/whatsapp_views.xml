@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- WhatsApp Message List View -->
+    <record id="view_apricot_whatsapp_message_list" model="ir.ui.view">
+        <field name="name">apricot.whatsapp.message.list</field>
+        <field name="model">apricot.whatsapp.message</field>
+        <field name="arch" type="xml">
+            <list string="WhatsApp Inbox">
+                <field name="created_at"/>
+                <field name="wa_number"/>
+                <field name="direction"/>
+                <field name="message_type"/>
+                <field name="template_name"/>
+                <field name="body_text"/>
+                <field name="status"/>
+                <field name="ticket_id"/>
+                <field name="job_card_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- WhatsApp Message Form View -->
+    <record id="view_apricot_whatsapp_message_form" model="ir.ui.view">
+        <field name="name">apricot.whatsapp.message.form</field>
+        <field name="model">apricot.whatsapp.message</field>
+        <field name="arch" type="xml">
+            <form string="WhatsApp Message">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="created_at"/>
+                            <field name="wa_number"/>
+                            <field name="direction"/>
+                            <field name="message_type"/>
+                            <field name="message_id"/>
+                        </group>
+
+                        <group>
+                            <field name="template_name"/>
+                            <field name="status"/>
+                            <field name="ticket_id"/>
+                            <field name="job_card_id"/>
+                            <field name="verify_url"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Message">
+                            <field name="body_text"/>
+                        </page>
+
+                        <page string="Error">
+                            <field name="error_text"/>
+                        </page>
+
+                        <page string="Raw Meta JSON">
+                            <field name="meta_json"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Simplified WhatsApp Message Search View for Odoo 19 compatibility -->
+    <record id="view_apricot_whatsapp_message_search" model="ir.ui.view">
+        <field name="name">apricot.whatsapp.message.search</field>
+        <field name="model">apricot.whatsapp.message</field>
+        <field name="arch" type="xml">
+            <search string="WhatsApp Messages">
+                <field name="wa_number"/>
+                <field name="message_id"/>
+                <field name="body_text"/>
+                <field name="ticket_id"/>
+                <field name="job_card_id"/>
+
+                <filter name="filter_incoming"
+                        string="Incoming"
+                        domain="[('direction', '=', 'in')]"/>
+
+                <filter name="filter_outgoing"
+                        string="Outgoing"
+                        domain="[('direction', '=', 'out')]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- WhatsApp Message Action -->
+    <record id="action_apricot_whatsapp_messages" model="ir.actions.act_window">
+        <field name="name">WhatsApp Inbox</field>
+        <field name="res_model">apricot.whatsapp.message</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_apricot_whatsapp_message_search"/>
+    </record>
+
+    <!-- Processed Messages List View -->
+    <record id="view_apricot_processed_message_list" model="ir.ui.view">
+        <field name="name">apricot.whatsapp.processed.message.list</field>
+        <field name="model">apricot.whatsapp.processed.message</field>
+        <field name="arch" type="xml">
+            <list string="Processed WhatsApp Messages">
+                <field name="message_id"/>
+                <field name="created_at"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Processed Messages Form View -->
+    <record id="view_apricot_processed_message_form" model="ir.ui.view">
+        <field name="name">apricot.whatsapp.processed.message.form</field>
+        <field name="model">apricot.whatsapp.processed.message</field>
+        <field name="arch" type="xml">
+            <form string="Processed WhatsApp Message">
+                <sheet>
+                    <group>
+                        <field name="message_id"/>
+                        <field name="created_at"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Processed Messages Action -->
+    <record id="action_apricot_processed_messages" model="ir.actions.act_window">
+        <field name="name">Processed Messages</field>
+        <field name="res_model">apricot.whatsapp.processed.message</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- WhatsApp Session List View -->
+    <record id="view_apricot_whatsapp_session_list" model="ir.ui.view">
+        <field name="name">apricot.whatsapp.session.list</field>
+        <field name="model">apricot.whatsapp.session</field>
+        <field name="arch" type="xml">
+            <list string="WhatsApp Sessions">
+                <field name="whatsapp_number"/>
+                <field name="name"/>
+                <field name="property_id"/>
+                <field name="unit_number"/>
+                <field name="current_step"/>
+                <field name="temp_category_id"/>
+                <field name="updated_at"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- WhatsApp Session Form View -->
+    <record id="view_apricot_whatsapp_session_form" model="ir.ui.view">
+        <field name="name">apricot.whatsapp.session.form</field>
+        <field name="model">apricot.whatsapp.session</field>
+        <field name="arch" type="xml">
+            <form string="WhatsApp Session">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="whatsapp_number"/>
+                            <field name="name"/>
+                            <field name="property_id"/>
+                            <field name="unit_number"/>
+                        </group>
+
+                        <group>
+                            <field name="current_step"/>
+                            <field name="temp_category_id"/>
+                            <field name="updated_at"/>
+                            <field name="created_at"/>
+                        </group>
+                    </group>
+
+                    <group string="Caption Buffer">
+                        <field name="caption_buffer"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- WhatsApp Sessions Action -->
+    <record id="action_apricot_whatsapp_sessions" model="ir.actions.act_window">
+        <field name="name">WhatsApp Sessions</field>
+        <field name="res_model">apricot.whatsapp.session</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Bulk Audit List View -->
+    <record id="view_apricot_bulk_audit_list" model="ir.ui.view">
+        <field name="name">apricot.whatsapp.bulk.audit.list</field>
+        <field name="model">apricot.whatsapp.bulk.audit</field>
+        <field name="arch" type="xml">
+            <list string="Bulk Message Audit">
+                <field name="sent_at"/>
+                <field name="property_id"/>
+                <field name="user_name"/>
+                <field name="whatsapp_number"/>
+                <field name="template_name"/>
+                <field name="status"/>
+                <field name="notice_text"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Bulk Audit Form View -->
+    <record id="view_apricot_bulk_audit_form" model="ir.ui.view">
+        <field name="name">apricot.whatsapp.bulk.audit.form</field>
+        <field name="model">apricot.whatsapp.bulk.audit</field>
+        <field name="arch" type="xml">
+            <form string="Bulk Message Audit">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="sent_at"/>
+                            <field name="property_id"/>
+                            <field name="property_name"/>
+                            <field name="user_name"/>
+                        </group>
+
+                        <group>
+                            <field name="whatsapp_number"/>
+                            <field name="status"/>
+                            <field name="template_name"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <field name="notice_text"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Bulk Audit Action -->
+    <record id="action_apricot_bulk_audit" model="ir.actions.act_window">
+        <field name="name">Bulk Message Audit</field>
+        <field name="res_model">apricot.whatsapp.bulk.audit</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

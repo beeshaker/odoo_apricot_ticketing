@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Application category shown in Settings / Access Rights -->
+        <record id="module_category_apricot_ticketing" model="ir.module.category">
+            <field name="name">Apricot Ticketing</field>
+            <field name="sequence">35</field>
+        </record>
+
+        <!-- Odoo 19 privilege used to group the user permission levels -->
+        <record id="privilege_apricot_ticketing" model="res.groups.privilege">
+            <field name="name">Apricot Ticketing</field>
+            <field name="category_id" ref="apricot_ticketing.module_category_apricot_ticketing"/>
+            <field name="sequence">10</field>
+        </record>
+
+        <!-- Separate API privilege so it does not conflict with normal user/admin levels -->
+        <record id="privilege_apricot_ticketing_api" model="res.groups.privilege">
+            <field name="name">Apricot Ticketing API</field>
+            <field name="category_id" ref="apricot_ticketing.module_category_apricot_ticketing"/>
+            <field name="sequence">20</field>
+        </record>
+
+        <!-- Ticketing User -->
+        <record id="group_ticketing_user" model="res.groups">
+            <field name="name">User</field>
+            <field name="privilege_id" ref="apricot_ticketing.privilege_apricot_ticketing"/>
+        </record>
+
+        <!-- Ticketing Admin -->
+        <record id="group_ticketing_admin" model="res.groups">
+            <field name="name">Admin</field>
+            <field name="privilege_id" ref="apricot_ticketing.privilege_apricot_ticketing"/>
+            <field name="implied_ids" eval="[(4, ref('apricot_ticketing.group_ticketing_user'))]"/>
+        </record>
+
+        <!-- Ticketing Super Admin -->
+        <record id="group_ticketing_super_admin" model="res.groups">
+            <field name="name">Super Admin</field>
+            <field name="privilege_id" ref="apricot_ticketing.privilege_apricot_ticketing"/>
+            <field name="implied_ids" eval="[(4, ref('apricot_ticketing.group_ticketing_admin'))]"/>
+        </record>
+
+        <!-- API User for Flask / WhatsApp integration -->
+        <record id="group_ticketing_api_user" model="res.groups">
+            <field name="name">API User</field>
+            <field name="privilege_id" ref="apricot_ticketing.privilege_apricot_ticketing_api"/>
+            <field name="implied_ids" eval="[(4, ref('apricot_ticketing.group_ticketing_user'))]"/>
+        </record>
+
+    </data>
+</odoo>

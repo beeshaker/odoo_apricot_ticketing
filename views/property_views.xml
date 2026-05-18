@@ -1,0 +1,64 @@
+<odoo>
+    <record id="view_apricot_property_list" model="ir.ui.view">
+        <field name="name">apricot.property.list</field>
+        <field name="model">apricot.property</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="supervisor_id"/>
+                <field name="requester_count"/>
+                <field name="ticket_count"/>
+                <field name="job_card_count"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_apricot_property_form" model="ir.ui.view">
+        <field name="name">apricot.property.form</field>
+        <field name="model">apricot.property</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_tickets" type="object" class="oe_stat_button" icon="fa-ticket">
+                            <field name="ticket_count" widget="statinfo" string="Tickets"/>
+                        </button>
+                        <button name="action_view_job_cards" type="object" class="oe_stat_button" icon="fa-wrench">
+                            <field name="job_card_count" widget="statinfo" string="Job Cards"/>
+                        </button>
+                    </div>
+                    <group>
+                        <field name="name"/>
+                        <field name="supervisor_id"/>
+                        <field name="active"/>
+                    </group>
+                    <group>
+                        <field name="notes"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_apricot_property_search" model="ir.ui.view">
+        <field name="name">apricot.property.search</field>
+        <field name="model">apricot.property</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="supervisor_id"/>
+                <filter name="active" string="Active" domain="[('active','=',True)]"/>
+                <filter name="inactive" string="Archived" domain="[('active','=',False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_apricot_properties" model="ir.actions.act_window">
+        <field name="name">Properties</field>
+        <field name="res_model">apricot.property</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_apricot_property_search"/>
+    </record>
+</odoo>

@@ -1,0 +1,23 @@
+<odoo>
+    <menuitem id="menu_apricot_ticketing_root" name="Apricot Ticketing" sequence="35" groups="apricot_ticketing.group_ticketing_user"/>
+
+    <menuitem id="menu_apricot_ticketing_tickets" name="Tickets" parent="menu_apricot_ticketing_root" sequence="10"/>
+    <menuitem id="menu_apricot_ticketing_all_tickets" name="All Tickets" parent="menu_apricot_ticketing_tickets" action="action_apricot_tickets" sequence="10"/>
+    <menuitem id="menu_apricot_ticketing_my_tickets" name="My Tickets" parent="menu_apricot_ticketing_tickets" action="action_apricot_my_tickets" sequence="20"/>
+
+    <menuitem id="menu_apricot_ticketing_job_cards" name="Job Cards" parent="menu_apricot_ticketing_root" sequence="20"/>
+    <menuitem id="menu_apricot_ticketing_all_job_cards" name="All Job Cards" parent="menu_apricot_ticketing_job_cards" action="action_apricot_job_cards" sequence="10"/>
+    <menuitem id="menu_apricot_ticketing_my_job_cards" name="My Job Cards" parent="menu_apricot_ticketing_job_cards" action="action_apricot_my_job_cards" sequence="20"/>
+
+    <menuitem id="menu_apricot_ticketing_whatsapp" name="WhatsApp" parent="menu_apricot_ticketing_root" sequence="30" groups="apricot_ticketing.group_ticketing_admin"/>
+    <menuitem id="menu_apricot_ticketing_whatsapp_inbox" name="WhatsApp Inbox" parent="menu_apricot_ticketing_whatsapp" action="action_apricot_whatsapp_messages" sequence="10"/>
+    <menuitem id="menu_apricot_ticketing_whatsapp_sessions" name="WhatsApp Sessions" parent="menu_apricot_ticketing_whatsapp" action="action_apricot_whatsapp_sessions" sequence="20"/>
+    <menuitem id="menu_apricot_ticketing_processed" name="Processed Messages" parent="menu_apricot_ticketing_whatsapp" action="action_apricot_processed_messages" sequence="30"/>
+    <menuitem id="menu_apricot_ticketing_bulk_audit" name="Bulk Message Audit" parent="menu_apricot_ticketing_whatsapp" action="action_apricot_bulk_audit" sequence="40"/>
+
+    <menuitem id="menu_apricot_ticketing_config" name="Configuration" parent="menu_apricot_ticketing_root" sequence="90" groups="apricot_ticketing.group_ticketing_admin"/>
+    <menuitem id="menu_apricot_ticketing_properties" name="Properties" parent="menu_apricot_ticketing_config" action="action_apricot_properties" sequence="10"/>
+    <menuitem id="menu_apricot_ticketing_requesters" name="Requesters" parent="menu_apricot_ticketing_config" action="action_apricot_requesters" sequence="20"/>
+    <menuitem id="menu_apricot_ticketing_categories" name="Ticket Categories" parent="menu_apricot_ticketing_config" action="action_apricot_ticket_categories" sequence="30"/>
+    <menuitem id="menu_apricot_ticketing_stages" name="Ticket Stages" parent="menu_apricot_ticketing_config" action="action_apricot_ticket_stages" sequence="40"/>
+</odoo>

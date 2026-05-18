@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_apricot_job_card_kanban" model="ir.ui.view">
+        <field name="name">apricot.job.card.kanban</field>
+        <field name="model">apricot.job.card</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="status" class="o_kanban_small_column">
+                <field name="name"/>
+                <field name="title"/>
+                <field name="property_id"/>
+                <field name="unit_number"/>
+                <field name="assigned_user_id"/>
+                <field name="status"/>
+
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_global_click o_kanban_record">
+                            <strong>
+                                <field name="name"/>
+                            </strong>
+
+                            <div class="mt-1">
+                                <field name="title"/>
+                            </div>
+
+                            <div class="text-muted">
+                                <field name="property_id"/>
+                                <t t-if="record.unit_number.raw_value">
+                                    / Unit <field name="unit_number"/>
+                                </t>
+                            </div>
+
+                            <div class="mt-2">
+                                Assigned:
+                                <field name="assigned_user_id"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_apricot_job_card_list" model="ir.ui.view">
+        <field name="name">apricot.job.card.list</field>
+        <field name="model">apricot.job.card</field>
+        <field name="arch" type="xml">
+            <list string="Job Cards">
+                <field name="name"/>
+                <field name="ticket_id"/>
+                <field name="title"/>
+                <field name="property_id"/>
+                <field name="unit_number"/>
+                <field name="assigned_user_id"/>
+                <field name="status"/>
+                <field name="estimated_cost"/>
+                <field name="actual_cost"/>
+                <field name="completed_at"/>
+                <field name="create_date"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_apricot_job_card_form" model="ir.ui.view">
+        <field name="name">apricot.job.card.form</field>
+        <field name="model">apricot.job.card</field>
+        <field name="arch" type="xml">
+            <form string="Job Card">
+                <header>
+                    <button name="action_start"
+                            type="object"
+                            string="Start"
+                            class="btn-primary"
+                            invisible="status != 'open'"/>
+
+                    <button name="action_complete"
+                            type="object"
+                            string="Complete"
+                            class="btn-success"
+                            invisible="status not in ('open', 'in_progress')"/>
+
+                    <button name="action_cancel"
+                            type="object"
+                            string="Cancel"
+                            class="btn-secondary"
+                            invisible="status in ('cancelled', 'signed_off')"/>
+
+                    <button name="action_generate_public_token"
+                            type="object"
+                            string="Generate Verification Link"
+                            class="btn-primary"
+                            invisible="public_token"/>
+
+                    <field name="status"
+                           widget="statusbar"
+                           statusbar_visible="open,in_progress,completed,signed_off"/>
+                </header>
+
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_attachments"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-paperclip">
+                            <field name="attachment_count"
+                                   widget="statinfo"
+                                   string="Attachments"/>
+                        </button>
+                    </div>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                        <h2>
+                            <field name="title" placeholder="Job card title"/>
+                        </h2>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="ticket_id"/>
+                            <field name="property_id"/>
+                            <field name="unit_number"/>
+                            <field name="assigned_user_id"/>
+                        </group>
+
+                        <group>
+                            <field name="created_by_user_id" readonly="1"/>
+                            <field name="estimated_cost"/>
+                            <field name="actual_cost"/>
+                            <field name="completed_at" readonly="1"/>
+                            <field name="public_token" readonly="1"/>
+                            <field name="public_token_created_at" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Description">
+                            <field name="description"/>
+                        </page>
+
+                        <page string="Activities">
+                            <field name="activities"
+                                   placeholder="Work done / activities performed..."/>
+                        </page>
+
+                        <page string="Signoff">
+                            <field name="signoff_ids">
+                                <list editable="bottom">
+                                    <field name="signed_at"/>
+                                    <field name="signed_by_name"/>
+                                    <field name="signed_by_role"/>
+                                    <field name="signoff_notes"/>
+                                    <field name="signature" widget="image"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Simplified search view for Odoo 19 compatibility -->
+    <record id="view_apricot_job_card_search" model="ir.ui.view">
+        <field name="name">apricot.job.card.search</field>
+        <field name="model">apricot.job.card</field>
+        <field name="arch" type="xml">
+            <search string="Job Cards">
+                <field name="name"/>
+                <field name="title"/>
+                <field name="ticket_id"/>
+                <field name="property_id"/>
+                <field name="assigned_user_id"/>
+
+                <filter name="filter_my_job_cards"
+                        string="My Job Cards"
+                        domain="[('assigned_user_id', '=', uid)]"/>
+
+                <filter name="filter_open"
+                        string="Open"
+                        domain="[('status', '=', 'open')]"/>
+
+                <filter name="filter_completed"
+                        string="Completed"
+                        domain="[('status', '=', 'completed')]"/>
+
+                <filter name="filter_signed_off"
+                        string="Signed Off"
+                        domain="[('status', '=', 'signed_off')]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_apricot_job_card_pivot" model="ir.ui.view">
+        <field name="name">apricot.job.card.pivot</field>
+        <field name="model">apricot.job.card</field>
+        <field name="arch" type="xml">
+            <pivot string="Job Card Analysis">
+                <field name="status" type="row"/>
+                <field name="property_id" type="col"/>
+                <field name="actual_cost" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_apricot_job_card_graph" model="ir.ui.view">
+        <field name="name">apricot.job.card.graph</field>
+        <field name="model">apricot.job.card</field>
+        <field name="arch" type="xml">
+            <graph string="Job Cards" type="bar">
+                <field name="status"/>
+                <field name="actual_cost" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_apricot_job_cards" model="ir.actions.act_window">
+        <field name="name">Job Cards</field>
+        <field name="res_model">apricot.job.card</field>
+        <field name="view_mode">kanban,list,form,pivot,graph</field>
+        <field name="search_view_id" ref="view_apricot_job_card_search"/>
+    </record>
+
+    <record id="action_apricot_my_job_cards" model="ir.actions.act_window">
+        <field name="name">My Job Cards</field>
+        <field name="res_model">apricot.job.card</field>
+        <field name="view_mode">kanban,list,form,pivot,graph</field>
+        <field name="domain">[('assigned_user_id', '=', uid)]</field>
+        <field name="search_view_id" ref="view_apricot_job_card_search"/>
+    </record>
+
+</odoo>
