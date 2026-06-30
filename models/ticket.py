@@ -1,5 +1,37 @@
+import logging
+import requests as _requests
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+
+_logger = logging.getLogger(__name__)
+
+
+def _notify_whatsapp(env, whatsapp_number: str, message: str) -> None:
+    """POST a message to the Flask bot's /send_message endpoint."""
+    ICP = env["ir.config_parameter"].sudo()
+    flask_url = (ICP.get_param("apricot_ticketing.flask_bot_url") or "").rstrip("/")
+    api_key = ICP.get_param("apricot_ticketing.flask_internal_api_key") or ""
+    if not flask_url or not api_key or not whatsapp_number:
+        _logger.debug(
+            "WhatsApp notification skipped: flask_bot_url=%r api_key_set=%s wa=%r",
+            flask_url, bool(api_key), whatsapp_number,
+        )
+        return
+    try:
+        resp = _requests.post(
+            f"{flask_url}/send_message",
+            json={"to": whatsapp_number, "message": message},
+            headers={"X-API-KEY": api_key},
+            timeout=10,
+        )
+        _logger.info(
+            "WhatsApp notification sent to %s status=%s", whatsapp_number, resp.status_code
+        )
+    except Exception:
+        _logger.warning(
+            "Failed to send WhatsApp notification to %s", whatsapp_number, exc_info=True
+        )
 
 
 class ApricotTicketStage(models.Model):
@@ -249,6 +281,14 @@ class ApricotTicket(models.Model):
 
                 rec.message_post(body=_("Stage changed to %s.") % rec.stage_id.name)
 
+                if rec.requester_whatsapp_number:
+                    _notify_whatsapp(
+                        self.env,
+                        rec.requester_whatsapp_number,
+                        f"📋 Update on your ticket *{rec.name}*:\n\n"
+                        f"Status has been changed to: *{rec.stage_id.name}*",
+                    )
+
         return result
 
     def action_mark_read(self):
@@ -350,6 +390,15 @@ class ApricotTicketUpdate(models.Model):
 
         for record in records:
             record.ticket_id.message_post(body=record.update_text)
+
+            wa = record.ticket_id.requester_whatsapp_number
+            if wa:
+                _notify_whatsapp(
+                    self.env,
+                    wa,
+                    f"📋 Update on your ticket *{record.ticket_id.name}*:\n\n"
+                    f"{record.update_text}",
+                )
 
         return records
 
